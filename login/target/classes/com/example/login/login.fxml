@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+  This is the main login form.
+  It's wrapped in a StackPane to allow the login form and the
+  "proceed" link to be shown in the same space, one after the other.
+-->
+<StackPane fx:controller="com.example.login.LoginController"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           style="-fx-background-color: linear-gradient(to bottom right, #e0f2f1, #b2dfdb);"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <!-- This GridPane contains the login fields. It will be hidden on success. -->
+    <GridPane fx:id="loginGrid" alignment="CENTER" hgap="10" vgap="12"
+              style="-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #80cbc4; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);">
+
+        <padding>
+            <Insets top="25" right="25" bottom="25" left="25"/>
+        </padding>
+
+        <Label text="Welcome Back" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #004d40;"/>
+
+        <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+               style="-fx-font-weight: bold; -fx-text-fill: #00695c;"/>
+
+        <TextField fx:id="usernameField" promptText="Enter your username" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   style="-fx-background-radius: 5; -fx-border-color: #4db6ac; -fx-border-radius: 5; -fx-prompt-text-fill: #b0bec5;"/>
+
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+               style="-fx-font-weight: bold; -fx-text-fill: #00695c;"/>
+
+        <PasswordField fx:id="passwordField" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       style="-fx-background-radius: 5; -fx-border-color: #4db6ac; -fx-border-radius: 5; -fx-prompt-text-fill: #b0bec5;"/>
+
+        <Button fx:id="loginButton" text="Log In" onAction="#handleLoginButtonAction"
+                GridPane.columnIndex="1" GridPane.rowIndex="3"
+                style="-fx-background-color: #00796b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20;"
+                GridPane.halignment="RIGHT"/>
+
+        <!-- This label will show success or error messages -->
+        <Label fx:id="messageLabel" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"
+               style="-fx-font-size: 13px;" />
+
+    </GridPane>
+
+    <!--
+      This VBox contains the "Proceed" link.
+      It is hidden by default (visible="false") and will be
+      faded in by the controller after a successful login.
+    -->
+    <VBox fx:id="proceedBox" alignment="CENTER" spacing="10" visible="false" opacity="0.0">
+        <Label fx:id="successLabel" text="Login Successful!"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #004d40;"/>
+        <Hyperlink fx:id="proceedLink" text="Click here to enter the main application"
+                   onAction="#handleProceedLinkAction"
+                   style="-fx-font-size: 16px; -fx-text-fill: #00796b;"/>
+    </VBox>
+
+</StackPane>
