@@ -1,15 +1,19 @@
 module com.cloudedmemories.FileManagerDesktopApp {
+	// Requires (JavaFX modules ug uban pa)
 	requires javafx.controls;
 	requires javafx.fxml;
+	requires javafx.graphics;
 	requires javafx.base;
-	requires java.desktop;
+	requires org.apache.commons.io;
 
-	opens com.cloudedmemories.FileManagerDesktopApp to javafx.fxml, javafx.base;
-	opens com.cloudedmemories.FileManagerDesktopApp.model to javafx.base;
-
-	exports com.cloudedmemories.FileManagerDesktopApp;
-	exports com.cloudedmemories.FileManagerDesktopApp.model;
+	// EXPORTS
+	exports com.cloudedmemories.login;
 	exports com.cloudedmemories.FileManagerDesktopApp.Utility;
+
+	// OPENS (Para ma-load ang FXML files ug Controllers)
+	opens com.cloudedmemories.login to javafx.fxml;
+	opens com.cloudedmemories.FileManagerDesktopApp.Utility to javafx.fxml;
+
+	// Para sa root resources/FXML files
+	opens com.cloudedmemories.FileManagerDesktopApp to javafx.fxml;
 }
-
-

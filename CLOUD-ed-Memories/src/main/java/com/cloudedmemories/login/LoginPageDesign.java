@@ -1,154 +1,102 @@
 package com.cloudedmemories.login;
 
-import javafx.animation.Animation;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+
+import java.io.InputStream;
+import com.cloudedmemories.FileManagerDesktopApp.Utility.App;
 
 public class LoginPageDesign extends Application {
 
+    private static final String IMAGE_PATH = "/images/background/CLOUDed.png";
+
     @Override
     public void start(Stage primaryStage) {
-        // --- Pixelated Cloudy Background ---
-        Pane cloudLayer = new Pane();
-        cloudLayer.setPrefSize(800, 600);
-        cloudLayer.setStyle("-fx-background-color: white;");
 
-        for (int i = 0; i < 8; i++) {
-            Circle cloud = new Circle(100, Color.web("lightblue", 0.3));
-            cloud.setEffect(new BoxBlur(30, 30, 3));
-            cloud.setTranslateX(Math.random() * 800);
-            cloud.setTranslateY(Math.random() * 600);
-
-            TranslateTransition drift = new TranslateTransition(Duration.seconds(15 + Math.random() * 10), cloud);
-            drift.setFromX(cloud.getTranslateX());
-            drift.setToX(cloud.getTranslateX() + 200);
-            drift.setCycleCount(Animation.INDEFINITE);
-            drift.setAutoReverse(true);
-            drift.play();
-
-            cloudLayer.getChildren().add(cloud);
+        // --- Background Image Loading (Static) ---
+        InputStream bgStream = getClass().getResourceAsStream(IMAGE_PATH);
+        if (bgStream == null) {
+            System.err.println("FATAL ERROR: Background image not found! Path checked: " + IMAGE_PATH);
         }
+        Image bgImage = (bgStream != null) ? new Image(bgStream) : null;
+        ImageView bgImageView = new ImageView(bgImage);
+        bgImageView.setFitWidth(800);
+        bgImageView.setFitHeight(600);
+        bgImageView.setPreserveRatio(false);
 
         // --- Login Form ---
-        VBox loginForm = new VBox(15); // spacing
+        VBox loginForm = new VBox(15);
+        loginForm.setAlignment(Pos.CENTER);
         loginForm.setMaxWidth(300);
+        loginForm.setTranslateY(-50);
 
-        TextField username = createStyledField("Username");
-        PasswordField password = (PasswordField) createStyledField("Password");
+        // Fields (FIXED SIZE)
+        TextField username = createStyledField(new TextField(), "admin");
+        PasswordField password = createStyledField(new PasswordField(), "1234");
 
         Button loginButton = new Button("Login");
         loginButton.setStyle(
-                "-fx-background-color: #4A9DEC;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-background-radius: 10px;" +
-                        "-fx-pref-height: 40px;" +
-                        "-fx-font-size: 14px;"
+                // Final, gamay nga sukat (FIXED SIZE: 9pt font, 3 12 padding)
+                "-fx-font-size: 9pt; " +
+                        "-fx-padding: 3 12; " +
+                        "-fx-background-color: linear-gradient(#fcc200, #ff9900); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 15; " +
+                        "-fx-cursor: hand;"
         );
-        loginButton.setEffect(new DropShadow(5, Color.rgb(74,157,236,0.3)));
+
+        loginButton.setOnAction(e -> {
+            String user = username.getText();
+            String pass = password.getText();
+
+            // Login Credentials: admin / 1234
+            if(user.equals("admin") && pass.equals("1234")) {
+                System.out.println("Login successful!");
+
+                // --- REDIRECTION LOGIC ---
+                primaryStage.close();
+
+                try {
+                    App mainApp = new App();
+                    mainApp.start(new Stage());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.err.println("CRITICAL FAILURE: Failed to start main app. Check App.java FXML path!");
+                }
+                // --- END REDIRECTION LOGIC ---
+
+            } else {
+                System.err.println("Incorrect username or password");
+            }
+        });
 
         loginForm.getChildren().addAll(username, password, loginButton);
 
-        // Center the form on top of background
-        StackPane root = new StackPane(cloudLayer, loginForm);
+        // StackPane Order: Background, Login Form
+        StackPane root = new StackPane(bgImageView, loginForm);
 
         Scene scene = new Scene(root, 800, 600);
-        primaryStage.setTitle("Login Page");
+        primaryStage.setTitle("Login Page Design");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    // --- Styled Text Field / Password Field ---
-    private TextField createStyledField(String placeholder) {
-        TextField field;
-        if (placeholder.equals("Password")) {
-            field = new PasswordField();
-        } else {
-            field = new TextField();
-        }
+    // Fixed size for input fields
+    private <T extends TextField> T createStyledField(T field, String placeholder) {
         field.setPromptText(placeholder);
-
-        field.setStyle(
-                "-fx-border-color: transparent;" +
-                        "-fx-border-width: 2px;" +
-                        "-fx-pref-width: 240px;" +
-                        "-fx-pref-height: 40px;" +
-                        "-fx-padding: 0 0 0 12px;" +
-                        "-fx-background-color: #F3F3F3;" +
-                        "-fx-background-radius: 10px;" +
-                        "-fx-border-radius: 10px;"
-        );
-
-        // Hover effect
-        field.setOnMouseEntered(e -> {
-            field.setStyle(
-                    "-fx-border-color: #4A9DEC;" +
-                            "-fx-border-width: 2px;" +
-                            "-fx-pref-width: 240px;" +
-                            "-fx-pref-height: 40px;" +
-                            "-fx-padding: 0 0 0 12px;" +
-                            "-fx-background-color: white;" +
-                            "-fx-background-radius: 10px;" +
-                            "-fx-border-radius: 10px;"
-            );
-            field.setEffect(new DropShadow(7, Color.rgb(74,157,236,0.2)));
-        });
-
-        field.setOnMouseExited(e -> {
-            field.setStyle(
-                    "-fx-border-color: transparent;" +
-                            "-fx-border-width: 2px;" +
-                            "-fx-pref-width: 240px;" +
-                            "-fx-pref-height: 40px;" +
-                            "-fx-padding: 0 0 0 12px;" +
-                            "-fx-background-color: #F3F3F3;" +
-                            "-fx-background-radius: 10px;" +
-                            "-fx-border-radius: 10px;"
-            );
-            field.setEffect(null);
-        });
-
-        // Focus effect
-        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                field.setStyle(
-                        "-fx-border-color: #4A9DEC;" +
-                                "-fx-border-width: 2px;" +
-                                "-fx-pref-width: 240px;" +
-                                "-fx-pref-height: 40px;" +
-                                "-fx-padding: 0 0 0 12px;" +
-                                "-fx-background-color: white;" +
-                                "-fx-background-radius: 10px;" +
-                                "-fx-border-radius: 10px;"
-                );
-                field.setEffect(new DropShadow(7, Color.rgb(74,157,236,0.2)));
-            } else {
-                field.setStyle(
-                        "-fx-border-color: transparent;" +
-                                "-fx-border-width: 2px;" +
-                                "-fx-pref-width: 240px;" +
-                                "-fx-pref-height: 40px;" +
-                                "-fx-padding: 0 0 0 12px;" +
-                                "-fx-background-color: #F3F3F3;" +
-                                "-fx-background-radius: 10px;" +
-                                "-fx-border-radius: 10px;"
-                );
-                field.setEffect(null);
-            }
-        });
-
+        field.setMaxWidth(250);
+        field.setStyle("-fx-font-size: 12pt; -fx-padding: 8; -fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 10;");
+        field.setEffect(new DropShadow(5, Color.BLACK));
         return field;
     }
 

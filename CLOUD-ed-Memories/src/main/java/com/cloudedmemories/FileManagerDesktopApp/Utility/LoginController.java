@@ -1,4 +1,4 @@
-package com.cloudedmemories.FileManagerDesktopApp;
+package com.cloudedmemories.FileManagerDesktopApp.Utility;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

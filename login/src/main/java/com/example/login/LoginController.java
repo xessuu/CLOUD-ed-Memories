@@ -1,4 +1,41 @@
 package com.example.login;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+
 public class LoginController {
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Label messageLabel;
+
+    @FXML
+    private void handleLogin() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if(username.equals("admin") && password.equals("1234")) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+                Scene dashboardScene = new Scene(loader.load());
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.setScene(dashboardScene);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            messageLabel.setText("Invalid username or password");
+        }
+    }
 }

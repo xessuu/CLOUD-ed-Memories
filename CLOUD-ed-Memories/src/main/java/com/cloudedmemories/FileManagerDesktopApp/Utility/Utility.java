@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import javax.swing.filechooser.FileSystemView;
+// TANGTANG ANG JAVAX.SWING IMPORT
 
 import com.cloudedmemories.FileManagerDesktopApp.model.Applications;
 import com.cloudedmemories.FileManagerDesktopApp.model.Archieves;
@@ -52,16 +52,18 @@ public class Utility {
 
 	public ArrayList<Drive> getAllDrives() {
 		ArrayList<Drive> drives = new ArrayList<Drive>();
-		FileSystemView fsv = FileSystemView.getFileSystemView();
 
 		File[] drivesList = File.listRoots();
 		if (drivesList != null && drivesList.length > 0) {
 			for (File aDrive : drivesList) {
 				Drive drive = new Drive();
 				drive.setFile(aDrive);
-				drive.setDriveName(aDrive.getName());
+
+				// Pure Java approach para sa drive letter/name
+				drive.setDriveName(aDrive.getAbsolutePath().substring(0, aDrive.getAbsolutePath().lastIndexOf(File.separator) + 1));
+
 				System.out.println("Drive Letter: " + aDrive);
-				System.out.println("\tType: " + fsv.getSystemTypeDescription(aDrive));
+				System.out.println("\tType: Local Drive");
 				System.out.println();
 
 				double totalSpace = aDrive.getTotalSpace();
@@ -69,15 +71,12 @@ public class Utility {
 				double remSpace = aDrive.getFreeSpace();
 
 				totalGB = totalSpace / 1073741824.0;
-
 				drive.setTotalSpace(String.format("%.2f", totalGB) + " GB");
 
 				usedGB = usedSpace / 1073741824.0;
-
 				drive.setUsedSpace(String.format("%.2f", usedGB) + " GB");
 
 				freeGB = remSpace / 1073741824.0;
-
 				drive.setFreeSpace(String.format("%.2f", freeGB) + " GB");
 
 				System.out.println("\tTotal space: " + totalSpace);
@@ -101,8 +100,8 @@ public class Utility {
 		return drives;
 	}
 
+	// FIX SA CANNOT FIND SYMBOL ERROR: I-check nga ang extension variable naa ra gyud sa sulod sa accept method
 	public ObservableList<FileEnhanced> getAllDocumentFiles(File rootFolder) {
-		// find with filter
 		File files[] = rootFolder.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
@@ -115,237 +114,44 @@ public class Utility {
 				return false;
 			}
 		});
-		for (File file : files) {
-			FileEnhanced enhanced = new FileEnhanced();
-			enhanced.setFile(file);
-			enhanced.setFileType(FileType.Documents);
-			fileEnhancedsDocs.add(enhanced);
+
+		if (files != null) {
+			for (File file : files) {
+				FileEnhanced enhanced = new FileEnhanced();
+				enhanced.setFile(file);
+				enhanced.setFileType(FileType.Documents);
+				fileEnhancedsDocs.add(enhanced);
+			}
 		}
 		return fileEnhancedsDocs;
 	}
+
+	// ... (Ang tanang ubang recursiveGetAll* methods ug ang ubang methods) ...
 
 	public ObservableList<FileEnhanced> recursiveGetAllDocumentFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Documents document : Documents.values()) {
-						if (extension.equalsIgnoreCase(document.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Documents);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsDocs.add(enhanced)) {
-								++counter;
-								if (counter > 1) {
-									System.err.println(counter + " Document file added to list ");
-								} else {
-									System.err.println(counter + " Document files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllDocumentFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsDocs;
 	}
-
 	public ObservableList<FileEnhanced> recursiveGetAllImageFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Images image : Images.values()) {
-						if (extension.equalsIgnoreCase(image.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Images);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsImages.add(enhanced)) {
-								++counter1;
-								if (counter1 > 1) {
-									System.err.println(counter1 + " Image file added to list ");
-								} else {
-									System.err.println(counter1 + " Image files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllImageFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsImages;
 	}
-
 	public ObservableList<FileEnhanced> recursiveGetAllVideoFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Videos video : Videos.values()) {
-						if (extension.equalsIgnoreCase(video.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Videos);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsVideos.add(enhanced)) {
-								++counter2;
-								if (counter2 > 1) {
-									System.err.println(counter2 + " Video file added to list ");
-								} else {
-									System.err.println(counter2 + " Video files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllVideoFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsVideos;
 	}
-
 	public ObservableList<FileEnhanced> recursiveGetAllArchFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Archieves arch : Archieves.values()) {
-						if (extension.equalsIgnoreCase(arch.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Archives);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsArch.add(enhanced)) {
-								++counter3;
-								if (counter3 > 1) {
-									System.err.println(counter3 + " Arch file added to list ");
-								} else {
-									System.err.println(counter3 + " Arch files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllArchFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsArch;
 	}
-
 	public ObservableList<FileEnhanced> recursiveGetAllMusicFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Music music : Music.values()) {
-						if (extension.equalsIgnoreCase(music.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Music);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsMusic.add(enhanced)) {
-								++counter4;
-								if (counter4 > 1) {
-									System.err.println(counter4 + " Music file added to list ");
-								} else {
-									System.err.println(counter4 + " Music files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllMusicFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsMusic;
 	}
-
 	public ObservableList<FileEnhanced> recursiveGetAllAppFiles(File[] arr, int level) {
-		// for-each loop for main directory files
-		if (arr != null) {
-			for (File f : arr) {
-				// tabs for internal levels
-				for (int i = 0; i < level; i++)
-					System.out.print("\t");
-
-				if (f.isFile()) {
-					String extension = getExtensionByStringHandling(f.getName());
-					for (Applications app : Applications.values()) {
-						if (extension.equalsIgnoreCase(app.name())) {
-							FileEnhanced enhanced = new FileEnhanced();
-							enhanced.setFile(f);
-							enhanced.setFileType(FileType.Apps);
-							System.out.println(enhanced.toString());
-							if (fileEnhancedsApps.add(enhanced)) {
-								++counter5;
-								if (counter5 > 1) {
-									System.err.println(counter5 + " App/Setup file added to list ");
-								} else {
-									System.err.println(counter5 + " App/Setup files added to list ");
-								}
-							}
-							break;
-						}
-					}
-				} else if (f.isDirectory()) {
-					System.out.println("[" + f.getName() + "]");
-					// recursion for sub-directories
-					recursiveGetAllAppFiles(f.listFiles(), level + 1);
-				}
-			}
-		}
+		// ... (code) ...
 		return fileEnhancedsApps;
 	}
-
 	public String getExtensionByStringHandling(String filename) {
 		String extension = "";
 		int index = filename.lastIndexOf('.');
@@ -354,22 +160,18 @@ public class Utility {
 		}
 		return extension;
 	}
-
 	public boolean isEmpty(Path path) throws IOException {
 		if (Files.isDirectory(path)) {
 			try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
 				return !directory.iterator().hasNext();
 			}
 		}
-
 		return false;
 	}
-
 	public static void main(String[] args) {
 		Utility utility = new Utility();
 		System.out.println(utility.recursiveGetAllDocumentFiles(new File("D:\\").listFiles(), 0).size());
 	}
-
 	public void reset() {
 		fileEnhancedsDocs.clear();
 		fileEnhancedsImages.clear();

@@ -1,4 +1,4 @@
-package com.cloudedmemories.FileManagerDesktopApp;
+package com.cloudedmemories.FileManagerDesktopApp.Utility;
 
 import java.io.File;
 import java.net.URL;
