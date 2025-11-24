@@ -9,7 +9,6 @@ import java.io.IOException;
 
 public class App extends Application {
 
-	// Ang saktong ABSOLUTE PATH
 	private static final String FXML_PATH = "/com/cloudedmemories/FileManagerDesktopApp/DashboardUI.fxml";
 
 	@Override

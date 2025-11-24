@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import com.cloudedmemories.FileManagerDesktopApp.Utility.Utility;
 import com.cloudedmemories.FileManagerDesktopApp.model.Drive;
 import com.cloudedmemories.FileManagerDesktopApp.model.FileEnhanced;
 import com.cloudedmemories.FileManagerDesktopApp.model.FileType;

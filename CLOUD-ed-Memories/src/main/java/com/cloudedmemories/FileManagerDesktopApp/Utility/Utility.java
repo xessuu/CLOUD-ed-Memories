@@ -8,17 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-// TANGTANG ANG JAVAX.SWING IMPORT
-
-import com.cloudedmemories.FileManagerDesktopApp.model.Applications;
-import com.cloudedmemories.FileManagerDesktopApp.model.Archieves;
 import com.cloudedmemories.FileManagerDesktopApp.model.Documents;
 import com.cloudedmemories.FileManagerDesktopApp.model.Drive;
 import com.cloudedmemories.FileManagerDesktopApp.model.FileEnhanced;
 import com.cloudedmemories.FileManagerDesktopApp.model.FileType;
-import com.cloudedmemories.FileManagerDesktopApp.model.Images;
-import com.cloudedmemories.FileManagerDesktopApp.model.Music;
-import com.cloudedmemories.FileManagerDesktopApp.model.Videos;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,7 +52,6 @@ public class Utility {
 				Drive drive = new Drive();
 				drive.setFile(aDrive);
 
-				// Pure Java approach para sa drive letter/name
 				drive.setDriveName(aDrive.getAbsolutePath().substring(0, aDrive.getAbsolutePath().lastIndexOf(File.separator) + 1));
 
 				System.out.println("Drive Letter: " + aDrive);
@@ -100,7 +92,6 @@ public class Utility {
 		return drives;
 	}
 
-	// FIX SA CANNOT FIND SYMBOL ERROR: I-check nga ang extension variable naa ra gyud sa sulod sa accept method
 	public ObservableList<FileEnhanced> getAllDocumentFiles(File rootFolder) {
 		File files[] = rootFolder.listFiles(new FileFilter() {
 			@Override
@@ -126,7 +117,6 @@ public class Utility {
 		return fileEnhancedsDocs;
 	}
 
-	// ... (Ang tanang ubang recursiveGetAll* methods ug ang ubang methods) ...
 
 	public ObservableList<FileEnhanced> recursiveGetAllDocumentFiles(File[] arr, int level) {
 		// ... (code) ...

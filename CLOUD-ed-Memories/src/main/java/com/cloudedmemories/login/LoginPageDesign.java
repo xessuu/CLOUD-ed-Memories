@@ -23,7 +23,6 @@ public class LoginPageDesign extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        // --- Background Image Loading (Static) ---
         InputStream bgStream = getClass().getResourceAsStream(IMAGE_PATH);
         if (bgStream == null) {
             System.err.println("FATAL ERROR: Background image not found! Path checked: " + IMAGE_PATH);
@@ -34,19 +33,16 @@ public class LoginPageDesign extends Application {
         bgImageView.setFitHeight(600);
         bgImageView.setPreserveRatio(false);
 
-        // --- Login Form ---
         VBox loginForm = new VBox(15);
         loginForm.setAlignment(Pos.CENTER);
         loginForm.setMaxWidth(300);
         loginForm.setTranslateY(-50);
 
-        // Fields (FIXED SIZE)
         TextField username = createStyledField(new TextField(), "admin");
         PasswordField password = createStyledField(new PasswordField(), "1234");
 
         Button loginButton = new Button("Login");
         loginButton.setStyle(
-                // Final, gamay nga sukat (FIXED SIZE: 9pt font, 3 12 padding)
                 "-fx-font-size: 9pt; " +
                         "-fx-padding: 3 12; " +
                         "-fx-background-color: linear-gradient(#fcc200, #ff9900); " +
@@ -59,11 +55,9 @@ public class LoginPageDesign extends Application {
             String user = username.getText();
             String pass = password.getText();
 
-            // Login Credentials: admin / 1234
             if(user.equals("admin") && pass.equals("1234")) {
                 System.out.println("Login successful!");
 
-                // --- REDIRECTION LOGIC ---
                 primaryStage.close();
 
                 try {
@@ -73,7 +67,6 @@ public class LoginPageDesign extends Application {
                     ex.printStackTrace();
                     System.err.println("CRITICAL FAILURE: Failed to start main app. Check App.java FXML path!");
                 }
-                // --- END REDIRECTION LOGIC ---
 
             } else {
                 System.err.println("Incorrect username or password");
@@ -82,7 +75,6 @@ public class LoginPageDesign extends Application {
 
         loginForm.getChildren().addAll(username, password, loginButton);
 
-        // StackPane Order: Background, Login Form
         StackPane root = new StackPane(bgImageView, loginForm);
 
         Scene scene = new Scene(root, 800, 600);
@@ -91,7 +83,6 @@ public class LoginPageDesign extends Application {
         primaryStage.show();
     }
 
-    // Fixed size for input fields
     private <T extends TextField> T createStyledField(T field, String placeholder) {
         field.setPromptText(placeholder);
         field.setMaxWidth(250);
